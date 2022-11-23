@@ -1,0 +1,16 @@
+databaseChangeLog:
+  - changeSet:
+      validCheckSum: ANY
+      id: 20220920_initial_database_structure
+      author: a.ivashko
+      preConditions:
+        - on fail: HALT
+      changes:
+        - sqlFile:
+            dbms: mysql
+            encoding: utf8
+            path: db/changelog/v-1-0-0/sql/V20220920_create_tables.sql
+        - sqlFile:
+            dbms: mysql
+            encoding: utf8
+            path: db/changelog/v-1-0-0/sql/V20220920_create_relationships.sql
