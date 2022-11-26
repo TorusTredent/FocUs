@@ -25,6 +25,7 @@ public class Pack {
     private User author;
 
     private String description;
+    private int daysBeforeOverwriting;
 
     @ManyToMany(cascade = CascadeType.PERSIST)
     private List<Rank> ranks;

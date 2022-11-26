@@ -1,20 +1,13 @@
 package by.bsuir.service.business.impl;
 
-import by.bsuir.dto.GetFactDto;
 import by.bsuir.exception.BusinessException;
 import by.bsuir.service.business.FactService;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.HashMap;
 import java.util.Map;
 
 @Service

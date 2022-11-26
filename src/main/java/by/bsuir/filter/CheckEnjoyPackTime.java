@@ -17,14 +17,13 @@ import java.io.IOException;
 @Slf4j
 @Order(SecurityProperties.DEFAULT_FILTER_ORDER + 5)
 @Component
-public class CheckFactOfDayFilter implements Filter {
+public class CheckEnjoyPackTime implements Filter {
 
     @Autowired
     private SecurityService securityService;
 
     @Autowired
     private CheckUserService checkUserService;
-
     @Autowired
     private NoSecureUrl noSecureUrl;
 
@@ -34,11 +33,11 @@ public class CheckFactOfDayFilter implements Filter {
 
         String url = ((HttpServletRequest) request).getRequestURL().toString();
         boolean exist = checkUrl(url);
-       
+
         if (!exist) {
-            checkUserService.checkUserFact(authorizationServiceUser);
+            checkUserService.checkUserEnjoyPack(authorizationServiceUser);
         }
-        chain.doFilter(request, response);
+            chain.doFilter(request, response);
     }
 
 

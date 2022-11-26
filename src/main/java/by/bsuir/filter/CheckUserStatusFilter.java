@@ -56,6 +56,7 @@ public class CheckUserStatusFilter implements Filter {
                 break;
             }
         }
+
         if (!exist){
             if (securityUserService.checkUserStatus(authorizationServiceUser)) {
                 HttpServletResponse httpResponse = (HttpServletResponse) response;

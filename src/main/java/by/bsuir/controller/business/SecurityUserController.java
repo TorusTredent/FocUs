@@ -1,7 +1,7 @@
 package by.bsuir.controller.business;
 
-import by.bsuir.dto.SignInResponseDto;
-import by.bsuir.dto.SignUpResponseDto;
+import by.bsuir.dto.auth.SignInResponseDto;
+import by.bsuir.dto.auth.SignUpResponseDto;
 import by.bsuir.entity.security.SecurityUserFirebase;
 import by.bsuir.service.business.SecurityService;
 import by.bsuir.service.business.SecurityUserService;

@@ -1,4 +1,4 @@
-package by.bsuir.dto;
+package by.bsuir.dto.api;
 
 import com.google.firebase.database.annotations.NotNull;
 import lombok.AllArgsConstructor;

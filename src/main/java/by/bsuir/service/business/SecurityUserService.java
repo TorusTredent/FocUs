@@ -1,7 +1,7 @@
 package by.bsuir.service.business;
 
-import by.bsuir.dto.SignInResponseDto;
-import by.bsuir.dto.SignUpResponseDto;
+import by.bsuir.dto.auth.SignInResponseDto;
+import by.bsuir.dto.auth.SignUpResponseDto;
 import by.bsuir.entity.security.SecurityUserFirebase;
 
 public interface SecurityUserService {

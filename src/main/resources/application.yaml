@@ -9,11 +9,11 @@ spring:
     change-log: classpath:db/changelog/db.changelog-master.yml
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQL8Dialect
-    show-sql: true
+    show-sql: false
 
   thymeleaf:
     cache: false

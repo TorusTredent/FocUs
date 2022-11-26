@@ -7,12 +7,9 @@ import by.bsuir.service.business.FactService;
 import by.bsuir.service.business.TranslatorService;
 import by.bsuir.service.entity.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.time.LocalDateTime;
-import java.time.Month;
 
 import static by.bsuir.entity.enums.LANGUAGES.ENGLISH;
 import static by.bsuir.entity.enums.LANGUAGES.RUSSIAN;
@@ -47,7 +44,7 @@ public class CheckUserServiceImpl implements CheckUserService {
             }
         } else {
             if (user.getCreationOfFactOfDay().getMonth().getValue() < LocalDateTime.now().getMonth().getValue() ||
-                    (user.getCreationOfFactOfDay().getMonth().getValue() == 12) && (LocalDateTime.now().getMonth() == JANUARY)) {
+                    (user.getCreationOfFactOfDay().getMonth().getValue() == 12 && LocalDateTime.now().getMonth() == JANUARY)) {
                 changeFact(user);
                 return true;
             }
@@ -55,6 +52,27 @@ public class CheckUserServiceImpl implements CheckUserService {
         return false;
     }
 
+    @Override
+    public boolean checkUserEnjoyPack(SecurityUserFirebase authorizationServiceUser) {
+        User user = userService.findByFirebaseId(authorizationServiceUser.getUid());
+        if (user.getEnjoyPackTime() == null) {
+            overwritingEnjoyPackTime(user);
+            return true;
+        }
+        if (user.getEndPackTime().getDayOfYear() == LocalDateTime.now().getDayOfYear() &&
+                user.getEndPackTime().getYear() == LocalDateTime.now().getYear()) {
+            overwritingEnjoyPackTime(user);
+            return true;
+        }
+        return false;
+    }
+
+
+    private void overwritingEnjoyPackTime(User user) {
+        user.setEnjoyPackTime(LocalDateTime.now());
+        user.setEndPackTime(LocalDateTime.now().plusDays(user.getUsedPack().getDaysBeforeOverwriting()));
+        userService.save(user);
+    }
 
     private void changeFact(User user) {
         String fact = factService.getFact();

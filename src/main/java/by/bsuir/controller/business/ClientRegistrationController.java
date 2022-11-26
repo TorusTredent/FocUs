@@ -1,15 +1,13 @@
 package by.bsuir.controller.business;
 
-import by.bsuir.dto.SignInResponseDto;
-import by.bsuir.dto.SignInUserDto;
-import by.bsuir.dto.SignUpResponseDto;
+import by.bsuir.dto.auth.SignInResponseDto;
+import by.bsuir.dto.auth.SignInUserDto;
+import by.bsuir.dto.auth.SignUpResponseDto;
 import by.bsuir.dto.VerifyRequestDto;
-import by.bsuir.entity.security.SecurityUserFirebase;
 import by.bsuir.service.business.EmailService;
 import by.bsuir.service.business.RegisterUserService;
 import by.bsuir.service.business.SecurityUserService;
 import by.bsuir.service.entity.UserService;
-import liquibase.pro.packaged.S;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

@@ -1,6 +1,6 @@
 package by.bsuir.service.business.impl;
 
-import by.bsuir.dto.TranslatorResponse;
+import by.bsuir.dto.api.TranslatorResponse;
 import by.bsuir.service.business.TranslatorService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -12,9 +12,6 @@ import org.springframework.web.client.RestTemplate;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-
-import static by.bsuir.entity.enums.LANGUAGES.ENGLISH;
-import static by.bsuir.entity.enums.LANGUAGES.RUSSIAN;
 
 @Service
 public class TranslatorServiceImpl implements TranslatorService {

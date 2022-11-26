@@ -6,5 +6,7 @@ import java.io.IOException;
 
 public interface CheckUserService {
 
-    boolean checkUserFact(SecurityUserFirebase authorizationServiceUser) throws IOException;
+    boolean checkUserFact(SecurityUserFirebase authorizationServiceUser);
+
+    boolean checkUserEnjoyPack(SecurityUserFirebase authorizationServiceUser);
 }

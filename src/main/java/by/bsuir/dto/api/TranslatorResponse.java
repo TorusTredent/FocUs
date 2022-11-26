@@ -1,4 +1,4 @@
-package by.bsuir.dto;
+package by.bsuir.dto.api;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -28,6 +28,9 @@ public class User {
     private String email;
     private String factOfDay;
     private LocalDateTime creationOfFactOfDay;
+    private LocalDateTime enjoyPackTime;
+    private LocalDateTime endPackTime;
+    private LocalDateTime startOfWeek;
 
     @ManyToOne
     @JoinColumn(name = "photo_path_id")

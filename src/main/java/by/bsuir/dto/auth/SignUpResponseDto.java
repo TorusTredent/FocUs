@@ -1,4 +1,4 @@
-package by.bsuir.dto;
+package by.bsuir.dto.auth;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;

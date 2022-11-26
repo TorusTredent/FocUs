@@ -6,4 +6,5 @@ public enum TASK_STATUS {
     COMPLETED,
     OVERDUE,
     NOT_ACTIVE,
+    REMOVED
 }
