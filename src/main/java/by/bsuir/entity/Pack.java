@@ -24,6 +24,7 @@ public class Pack {
     @JoinColumn(updatable = false)
     private User author;
 
+    private String name;
     private String description;
     private int daysBeforeOverwriting;
 

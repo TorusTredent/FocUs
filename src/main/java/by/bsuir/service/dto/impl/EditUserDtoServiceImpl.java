@@ -3,6 +3,8 @@ package by.bsuir.service.dto.impl;
 import by.bsuir.dto.user.UpdateUserDto;
 import by.bsuir.entity.User;
 import by.bsuir.entity.enums.user.USER_STATUS;
+import by.bsuir.exception.BusinessException;
+import by.bsuir.service.business.CheckUserService;
 import by.bsuir.service.business.SecurityService;
 import by.bsuir.service.dto.EditUserService;
 import by.bsuir.service.entity.UserService;
@@ -23,11 +25,13 @@ public class EditUserDtoServiceImpl implements EditUserService {
 
     private final SecurityService securityService;
     private final UserService userService;
+    private final CheckUserService checkUserService;
 
     @Autowired
-    public EditUserDtoServiceImpl(SecurityService securityService, UserService userService) {
+    public EditUserDtoServiceImpl(SecurityService securityService, UserService userService, CheckUserService checkUserService) {
         this.securityService = securityService;
         this.userService = userService;
+        this.checkUserService = checkUserService;
     }
 
     @Transactional
@@ -60,6 +64,40 @@ public class EditUserDtoServiceImpl implements EditUserService {
     public boolean deleteUserProfile() {
         User user= userService.findByFirebaseId(getUid());
         user.setUser_status(USER_STATUS.REMOVED);
+        return true;
+    }
+
+    @Override
+    @Transactional
+    @Modifying
+    public boolean follow(String email) {
+        User user = userService.findByFirebaseId(getUid());
+        User sub = userService.findByEmail(email);
+
+        if (checkUserService.checkUserInList(user.getSubscriptions(), sub)) {
+            throw new BusinessException(String.format("User with email %s is already sub", email));
+        }
+
+        sub.getFollowers().add(user);
+        user.getSubscriptions().add(sub);
+
+        return true;
+    }
+
+    @Override
+    @Transactional
+    @Modifying
+    public boolean unfollow(String email) {
+        User user = userService.findByFirebaseId(getUid());
+        User sub = userService.findByEmail(email);
+
+        if (!checkUserService.checkUserInList(user.getSubscriptions(), sub)) {
+            throw new BusinessException(String.format("User with email %s is already unsub", email));
+        }
+
+        sub.getFollowers().remove(user);
+        user.getSubscriptions().remove(sub);
+
         return true;
     }
 

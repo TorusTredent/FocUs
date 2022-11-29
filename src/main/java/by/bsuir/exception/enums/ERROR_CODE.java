@@ -8,7 +8,8 @@ public enum ERROR_CODE {
     USER_IS_ALREADY_EXIST("User is already exist"),
     USER_NOT_FOUND("User not found"),
     CATEGORY_NOT_FOUND("Category not found"),
-    TASK_NOT_FOUND ("Task not found");
+    TASK_NOT_FOUND ("Task not found"),
+    PACK_NOT_FOUND("Pack not found");
 
     private String message;
 

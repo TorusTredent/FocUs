@@ -1,6 +1,7 @@
 package by.bsuir.controller.entity;
 
 import by.bsuir.dto.user.FriendWithTasksDto;
+import by.bsuir.dto.user.GetUserDto;
 import by.bsuir.dto.user.UpdateUserDto;
 import by.bsuir.dto.util.DateDto;
 import by.bsuir.dto.user.UserProfileDto;
@@ -56,5 +57,22 @@ public class UserController {
     @GetMapping("/friends/day")
     public ResponseEntity<List<FriendWithTasksDto>> getFriendsTasks(@RequestBody DateDto dateDto) {
         return new ResponseEntity<>(getUserService.getFriendsWithTasks(dateDto.getDate()), OK);
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<List<GetUserDto>> getAll() {
+        return new ResponseEntity<>(getUserService.getAll(), OK);
+    }
+
+    @PostMapping("/follow")
+    public ResponseEntity<HttpStatus> follow(String email) {
+        editUserService.follow(email);
+        return new ResponseEntity<>(OK);
+    }
+
+    @PostMapping("/unfollow")
+    public ResponseEntity<HttpStatus> unfollow(String email) {
+        editUserService.unfollow(email);
+        return new ResponseEntity<>(OK);
     }
 }

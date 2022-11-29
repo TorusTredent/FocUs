@@ -11,4 +11,8 @@ public interface EditUserService {
     boolean updateProfile(UpdateUserDto updateUserDto);
 
     boolean deleteUserProfile();
+
+    boolean follow(String email);
+
+    boolean unfollow(String email);
 }

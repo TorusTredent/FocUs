@@ -6,13 +6,16 @@ import by.bsuir.entity.Task;
 import by.bsuir.entity.User;
 import by.bsuir.entity.enums.task.TASK_STATUS;
 import by.bsuir.exception.BusinessException;
+import by.bsuir.exception.enums.ERROR_CODE;
 import by.bsuir.service.business.SecurityService;
 import by.bsuir.service.dto.EditTaskService;
 import by.bsuir.service.dto.GetCategoryService;
 import by.bsuir.service.dto.GetUserService;
 import by.bsuir.service.entity.TaskService;
 import by.bsuir.service.entity.UserService;
+import org.aspectj.weaver.ast.Not;
 import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -21,6 +24,8 @@ import java.util.List;
 
 import static by.bsuir.entity.enums.task.TASK_STATUS.ACTIVE;
 import static by.bsuir.entity.enums.task.TASK_TYPE.CUSTOM;
+import static by.bsuir.exception.enums.ERROR_CODE.TASK_NOT_FOUND;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Service
 public class EditTaskServiceImpl implements EditTaskService {
@@ -69,7 +74,11 @@ public class EditTaskServiceImpl implements EditTaskService {
 
     @Override
     public boolean deleteById(Long taskId) {
+        User user = userService.findByFirebaseId(getUid());
         Task task = taskService.findById(taskId);
+        if (!task.getAuthor().equals(user)) {
+            throw new BusinessException(String.format("Task with id %s not found", taskId), TASK_NOT_FOUND, NOT_FOUND);
+        }
         taskService.delete(task);
         return true;
     }
@@ -81,6 +90,9 @@ public class EditTaskServiceImpl implements EditTaskService {
         Task task = taskService.findById(updateTaskDto.getTaskId());
         User user = userService.findByFirebaseId(getUid());
 
+        if (!task.getAuthor().equals(user)) {
+            throw new BusinessException(String.format("Task with id %s not found", updateTaskDto.getTaskId()), TASK_NOT_FOUND, NOT_FOUND);
+        }
         if (task.getCreateDate().isAfter(updateTaskDto.getDeadline())) {
             throw new BusinessException("Date input incorrect");
         }
@@ -100,7 +112,11 @@ public class EditTaskServiceImpl implements EditTaskService {
     @Modifying
     @Transactional
     public boolean updateTaskStatus(Long taskId, TASK_STATUS taskStatus) {
+        User user = userService.findByFirebaseId(getUid());
         Task task = taskService.findById(taskId);
+        if (!task.getAuthor().equals(user)) {
+            throw new BusinessException(String.format("Task with id %s not found", taskId), TASK_NOT_FOUND, NOT_FOUND);
+        }
 
         task.setTaskStatus(taskStatus);
 

@@ -2,6 +2,7 @@ package by.bsuir.service.dto.impl;
 
 import by.bsuir.dto.user.FriendDto;
 import by.bsuir.dto.user.FriendWithTasksDto;
+import by.bsuir.dto.user.GetUserDto;
 import by.bsuir.dto.user.UserProfileDto;
 import by.bsuir.entity.Task;
 import by.bsuir.entity.User;
@@ -20,6 +21,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import static by.bsuir.entity.enums.user.USER_STATUS.ACTIVE;
+import static by.bsuir.exception.enums.ERROR_CODE.TASK_NOT_FOUND;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Service
@@ -72,6 +74,31 @@ public class GetUserServiceImpl implements GetUserService {
         List<User> blockedList = user.getBlackList();
 
         return mapToFriendDto(user, followers, blockedList, time);
+    }
+
+    @Override
+    public List<GetUserDto> getAll() {
+        User user = userService.findByFirebaseId(getUid());
+        List<User> users = userService.findAll();
+
+        if (users.isEmpty()) {
+            throw new BusinessException("Users not found", TASK_NOT_FOUND);
+        }
+
+        return mapToGetUserDto(user, users);
+    }
+
+    private List<GetUserDto> mapToGetUserDto(User auth, List<User> users) {
+        return users.stream()
+                .map(user -> GetUserDto.builder()
+                        .username(user.getUsername())
+                        .email(user.getEmail())
+                        .user_status(user.getUser_status())
+                        .user_role(user.getUser_role())
+                        .friend(auth.getFollowers().stream()
+                                .anyMatch(follower -> follower.equals(user)))
+                        .build())
+                .toList();
     }
 
 

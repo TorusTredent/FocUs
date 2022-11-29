@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static by.bsuir.entity.enums.LANGUAGES.ENGLISH;
 import static by.bsuir.entity.enums.LANGUAGES.RUSSIAN;
@@ -65,6 +66,11 @@ public class CheckUserServiceImpl implements CheckUserService {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public boolean checkUserInList(List<User> list, User user) {
+        return list.stream().anyMatch(user::equals);
     }
 
 

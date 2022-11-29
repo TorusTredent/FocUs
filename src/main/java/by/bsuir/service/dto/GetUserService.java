@@ -1,6 +1,7 @@
 package by.bsuir.service.dto;
 
 import by.bsuir.dto.user.FriendWithTasksDto;
+import by.bsuir.dto.user.GetUserDto;
 import by.bsuir.dto.user.UserProfileDto;
 import by.bsuir.entity.User;
 
@@ -13,4 +14,6 @@ public interface GetUserService {
     List<User> getUserFriendsByEmails(User user, List<String> friendsEmail);
 
     List<FriendWithTasksDto> getFriendsWithTasks(LocalDateTime time);
+
+    List<GetUserDto> getAll();
 }
