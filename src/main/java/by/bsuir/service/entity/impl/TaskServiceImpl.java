@@ -42,4 +42,20 @@ public class TaskServiceImpl implements TaskService {
     public Task save(Task task) {
         return taskRepository.save(task);
     }
+
+    @Override
+    public void deleteById(Long taskId) {
+        taskRepository.deleteById(taskId);
+    }
+
+    @Override
+    public Task findById(Long taskId) {
+        return taskRepository.findById(taskId)
+                .orElseThrow(() -> new BusinessException(String.format("Task with id %s not found", taskId), TASK_NOT_FOUND, NOT_FOUND));
+    }
+
+    @Override
+    public void delete(Task task) {
+        taskRepository.delete(task);
+    }
 }

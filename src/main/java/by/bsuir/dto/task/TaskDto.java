@@ -1,9 +1,9 @@
 package by.bsuir.dto.task;
 
+import by.bsuir.dto.user.FriendDto;
 import by.bsuir.entity.Category;
 import by.bsuir.entity.enums.task.TASK_PRIORITY;
 import by.bsuir.entity.enums.task.TASK_STATUS;
-import by.bsuir.entity.enums.task.TASK_TYPE;
 import lombok.Builder;
 import lombok.Data;
 
@@ -21,4 +21,5 @@ public class TaskDto {
     private LocalDateTime deadline;
     private TASK_STATUS taskStatus;
     private TASK_PRIORITY taskPriority;
+    private List<FriendDto> friendDtos;
 }

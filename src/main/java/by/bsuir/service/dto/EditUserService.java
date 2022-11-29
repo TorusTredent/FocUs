@@ -9,4 +9,6 @@ public interface EditUserService {
     boolean setUserDate(LocalDateTime date);
 
     boolean updateProfile(UpdateUserDto updateUserDto);
+
+    boolean deleteUserProfile();
 }

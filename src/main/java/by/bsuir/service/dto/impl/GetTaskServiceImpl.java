@@ -3,6 +3,8 @@ package by.bsuir.service.dto.impl;
 import by.bsuir.dto.task.TaskDto;
 import by.bsuir.dto.task.TaskForStatDto;
 import by.bsuir.dto.task.TaskStatDto;
+import by.bsuir.dto.user.FriendDto;
+import by.bsuir.dto.user.FriendTaskDto;
 import by.bsuir.entity.Task;
 import by.bsuir.entity.User;
 import by.bsuir.service.business.SecurityService;
@@ -11,15 +13,14 @@ import by.bsuir.service.entity.TaskService;
 import by.bsuir.service.entity.UserService;
 import org.springframework.stereotype.Service;
 
-import java.time.DayOfWeek;
 import java.time.LocalDateTime;
-import java.time.temporal.TemporalAdjusters;
-import java.time.temporal.WeekFields;
 import java.util.List;
-import java.util.Locale;
+import java.util.stream.Collectors;
 
+import static by.bsuir.entity.enums.task.TASK_PRIVACY.PUBLIC;
 import static by.bsuir.entity.enums.task.TASK_STATUS.COMPLETED;
 import static by.bsuir.entity.enums.task.TASK_STATUS.REMOVED;
+import static by.bsuir.utils.DateUtils.*;
 
 @Service
 public class GetTaskServiceImpl implements GetTaskService {
@@ -47,11 +48,11 @@ public class GetTaskServiceImpl implements GetTaskService {
     }
 
     @Override
-    public List<TaskDto> getAll(LocalDateTime atStartOfDay) {
+    public List<TaskDto> getAllInWeek(LocalDateTime date) {
         User user = userService.findByFirebaseId(getUid());
 
-        LocalDateTime startOfCurrentWeek = getStartOfCurrentWeek(atStartOfDay);
-        LocalDateTime endOfWeek = getEndOfWeek(atStartOfDay);
+        LocalDateTime startOfCurrentWeek = getStartOfCurrentWeek(date);
+        LocalDateTime endOfWeek = getEndOfWeek(date);
 
         List<Task> taskByDate = taskService.findTaskByUserIdAndDateBetween(user.getId(), startOfCurrentWeek, endOfWeek);
 
@@ -68,21 +69,14 @@ public class GetTaskServiceImpl implements GetTaskService {
                         .deadline(task.getDeadLine())
                         .taskStatus(task.getTaskStatus())
                         .taskPriority(task.getTaskPriority())
+                        .friendDtos(task.getFriends().stream()
+                                .map(user -> FriendDto.builder()
+                                        .username(user.getUsername())
+                                        .email(user.getEmail())
+                                        .build())
+                                .toList())
                         .build())
                 .toList();
-    }
-
-    @Override
-    public LocalDateTime getStartOfCurrentWeek(LocalDateTime date) {
-        DayOfWeek firstDayOfWeek = WeekFields.of(Locale.getDefault()).getFirstDayOfWeek();
-        return date.with(TemporalAdjusters.previousOrSame(firstDayOfWeek));
-    }
-
-    @Override
-    public LocalDateTime getEndOfWeek(LocalDateTime date) {
-        DayOfWeek firstDayOfWeek = WeekFields.of(Locale.getDefault()).getFirstDayOfWeek();
-        DayOfWeek lastDayOfWeek = firstDayOfWeek.plus(6);
-        return date.with(TemporalAdjusters.nextOrSame(lastDayOfWeek));
     }
 
     @Override
@@ -91,6 +85,54 @@ public class GetTaskServiceImpl implements GetTaskService {
                 .filter(task -> task.getTaskStatus() == COMPLETED)
                 .count();
     }
+
+    @Override
+    public List<Task> getFriendTasks(User friend, User author, LocalDateTime time) {
+        return friend.getTasks().stream()
+                .filter(task -> task.getFriends().stream()
+                        .anyMatch(user -> user.equals(author)))
+                .filter(task -> task.getTaskPrivacy() == PUBLIC)
+                .filter(task -> task.getDeadLine().getDayOfYear() == time.getDayOfYear() &&
+                        task.getDeadLine().getYear() == time.getYear())
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<FriendTaskDto> mapToFriendsTaskDto(User friend, User author, LocalDateTime time) {
+        List<Task> tasks = getFriendTasks(friend, author, time);
+        return tasks.stream()
+                .map(task -> FriendTaskDto.builder()
+                        .id(task.getId())
+                        .status(task.getTaskStatus())
+                        .name(task.getName())
+                        .build())
+                .toList();
+    }
+
+    @Override
+    public List<TaskDto> getAllInMonth(LocalDateTime date) {
+        User user = userService.findByFirebaseId(getUid());
+
+        LocalDateTime startOfCurrentWeek = getStartOfMonth(date);
+        LocalDateTime endOfMonth = getEndOfMonth(date);
+
+        List<Task> taskByDate = taskService.findTaskByUserIdAndDateBetween(user.getId(), startOfCurrentWeek, endOfMonth);
+
+        return mapTasksToTaskDto(taskByDate);
+    }
+
+    @Override
+    public List<TaskDto> getAllInYear(LocalDateTime date) {
+        User user = userService.findByFirebaseId(getUid());
+
+        LocalDateTime startOfCurrentWeek = getStartOfYear(date);
+        LocalDateTime endOfMonth = getEndOfYear(date);
+
+        List<Task> taskByDate = taskService.findTaskByUserIdAndDateBetween(user.getId(), startOfCurrentWeek, endOfMonth);
+
+        return mapTasksToTaskDto(taskByDate);
+    }
+
     private TaskStatDto mapTasksToTaskStat(List<Task> tasks) {
         TaskStatDto taskStatDto = TaskStatDto.builder()
                 .create(0L)
@@ -108,13 +150,11 @@ public class GetTaskServiceImpl implements GetTaskService {
         });
 
         taskStatDto.setTaskForStatDtos(tasks.stream()
-                .map(task -> {
-                    return TaskForStatDto.builder()
-                            .creationDate(task.getCreateDate())
-                            .deadline(task.getDeadLine())
-                            .task_type(task.getTaskType())
-                            .build();
-                })
+                .map(task -> TaskForStatDto.builder()
+                        .creationDate(task.getCreateDate())
+                        .deadline(task.getDeadLine())
+                        .task_type(task.getTaskType())
+                        .build())
                 .toList()
         );
         return taskStatDto;

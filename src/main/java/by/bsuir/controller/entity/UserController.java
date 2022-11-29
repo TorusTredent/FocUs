@@ -1,5 +1,6 @@
 package by.bsuir.controller.entity;
 
+import by.bsuir.dto.user.FriendWithTasksDto;
 import by.bsuir.dto.user.UpdateUserDto;
 import by.bsuir.dto.util.DateDto;
 import by.bsuir.dto.user.UserProfileDto;
@@ -10,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 import static org.springframework.http.HttpStatus.OK;
 
@@ -42,5 +45,16 @@ public class UserController {
     public ResponseEntity<HttpStatus> updateProfile(@RequestBody UpdateUserDto updateUserDto){
         editUserService.updateProfile(updateUserDto);
         return new ResponseEntity<>(OK);
+    }
+
+    @DeleteMapping("/delete")
+    public ResponseEntity<HttpStatus> deleteProfile() {
+        editUserService.deleteUserProfile();
+        return new ResponseEntity<>(OK);
+    }
+
+    @GetMapping("/friends/day")
+    public ResponseEntity<List<FriendWithTasksDto>> getFriendsTasks(@RequestBody DateDto dateDto) {
+        return new ResponseEntity<>(getUserService.getFriendsWithTasks(dateDto.getDate()), OK);
     }
 }

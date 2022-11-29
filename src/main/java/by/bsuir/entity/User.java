@@ -49,6 +49,9 @@ public class User {
     private List<User> subscriptions;
 
     @ManyToMany(cascade = CascadeType.PERSIST)
+    private List<User> blackList;
+
+    @ManyToMany(cascade = CascadeType.PERSIST)
     private List<Task> tasks;
 
     @ManyToMany(cascade = CascadeType.PERSIST)
@@ -63,6 +66,7 @@ public class User {
     @OneToMany(fetch = FetchType.EAGER,cascade = CascadeType.PERSIST)
     @JoinColumn(name = "user_id")
     private List<ClientApp> clientApps;
+
 
     @Enumerated(value = EnumType.STRING)
     private USER_ROLE user_role;

@@ -2,6 +2,7 @@ package by.bsuir.service.dto.impl;
 
 import by.bsuir.dto.user.UpdateUserDto;
 import by.bsuir.entity.User;
+import by.bsuir.entity.enums.user.USER_STATUS;
 import by.bsuir.service.business.SecurityService;
 import by.bsuir.service.dto.EditUserService;
 import by.bsuir.service.entity.UserService;
@@ -50,6 +51,15 @@ public class EditUserDtoServiceImpl implements EditUserService {
         user.setUsername(updateUserDto.getUsername());
         user.setEmail(updateUserDto.getEmail());
 
+        return true;
+    }
+
+    @Override
+    @Transactional
+    @Modifying
+    public boolean deleteUserProfile() {
+        User user= userService.findByFirebaseId(getUid());
+        user.setUser_status(USER_STATUS.REMOVED);
         return true;
     }
 
