@@ -20,9 +20,11 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static by.bsuir.entity.enums.task.TASK_STATUS.ACTIVE;
+import static by.bsuir.entity.enums.task.TASK_STATUS.REMOVED;
 import static by.bsuir.entity.enums.task.TASK_TYPE.CUSTOM;
 import static by.bsuir.exception.enums.ERROR_CODE.TASK_NOT_FOUND;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
@@ -69,17 +71,22 @@ public class EditTaskServiceImpl implements EditTaskService {
                 .build());
 
         user.getTasks().add(task);
+
+        userService.save(user);
         return true;
     }
 
     @Override
+    @Modifying
+    @Transactional
     public boolean deleteById(Long taskId) {
         User user = userService.findByFirebaseId(getUid());
         Task task = taskService.findById(taskId);
         if (!task.getAuthor().equals(user)) {
             throw new BusinessException(String.format("Task with id %s not found", taskId), TASK_NOT_FOUND, NOT_FOUND);
         }
-        taskService.delete(task);
+        task.setTaskStatus(REMOVED);
+        taskService.save(task);
         return true;
     }
 

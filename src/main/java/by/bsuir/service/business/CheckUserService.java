@@ -12,4 +12,6 @@ public interface CheckUserService {
     boolean checkUserEnjoyPack(SecurityUserFirebase authorizationServiceUser);
 
     boolean checkUserInList(List<User> subs, User user);
+
+    boolean checkUserPack(SecurityUserFirebase authorizationServiceUser);
 }

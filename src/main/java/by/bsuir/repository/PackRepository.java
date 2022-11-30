@@ -1,7 +1,7 @@
 package by.bsuir.repository;
 
 import by.bsuir.entity.Pack;
-import by.bsuir.entity.Rank;
+import by.bsuir.entity.User;
 import by.bsuir.entity.enums.pack.PACK_TYPE;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -18,4 +18,8 @@ public interface PackRepository extends JpaRepository<Pack, Long> {
     Optional<Pack> findByPack_type(@Param("pack_type") PACK_TYPE pack_type);
 
     boolean existsByName(String name);
+
+    Optional<Pack> findByName(String name);
+
+    Optional<Pack> findByAuthorAndId(User author, Long id);
 }

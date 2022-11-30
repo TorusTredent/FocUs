@@ -1,4 +1,4 @@
-package by.bsuir.dto.pack;
+package by.bsuir.dto.pack.rank;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

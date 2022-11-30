@@ -35,6 +35,7 @@ public class CheckEnjoyPackTime implements Filter {
         boolean exist = checkUrl(url);
 
         if (!exist) {
+            checkUserService.checkUserPack(authorizationServiceUser);
             checkUserService.checkUserEnjoyPack(authorizationServiceUser);
         }
             chain.doFilter(request, response);

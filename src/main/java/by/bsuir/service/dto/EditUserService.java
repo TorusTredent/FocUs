@@ -15,4 +15,8 @@ public interface EditUserService {
     boolean follow(String email);
 
     boolean unfollow(String email);
+
+    boolean installPackByName(String name);
+
+    boolean uninstallPackByName(String name);
 }

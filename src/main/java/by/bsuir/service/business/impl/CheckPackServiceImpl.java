@@ -1,6 +1,6 @@
 package by.bsuir.service.business.impl;
 
-import by.bsuir.dto.pack.CreateRankDto;
+import by.bsuir.dto.pack.rank.CreateRankDto;
 import by.bsuir.service.business.CheckPackService;
 import org.springframework.stereotype.Service;
 

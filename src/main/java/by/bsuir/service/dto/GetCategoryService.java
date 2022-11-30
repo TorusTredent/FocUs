@@ -9,4 +9,5 @@ public interface GetCategoryService {
 
 
     List<Category> getCategoriesByNames(User user, List<String> categoryNames);
+    List<Category> getAllCategories();
 }

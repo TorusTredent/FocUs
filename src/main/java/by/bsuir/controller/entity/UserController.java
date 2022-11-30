@@ -59,20 +59,32 @@ public class UserController {
         return new ResponseEntity<>(getUserService.getFriendsWithTasks(dateDto.getDate()), OK);
     }
 
-    @GetMapping("/all")
+    @GetMapping("/get/all")
     public ResponseEntity<List<GetUserDto>> getAll() {
         return new ResponseEntity<>(getUserService.getAll(), OK);
     }
 
     @PostMapping("/follow")
-    public ResponseEntity<HttpStatus> follow(String email) {
+    public ResponseEntity<HttpStatus> follow(@RequestParam String email) {
         editUserService.follow(email);
         return new ResponseEntity<>(OK);
     }
 
     @PostMapping("/unfollow")
-    public ResponseEntity<HttpStatus> unfollow(String email) {
+    public ResponseEntity<HttpStatus> unfollow(@RequestParam String email) {
         editUserService.unfollow(email);
+        return new ResponseEntity<>(OK);
+    }
+
+    @PostMapping("/pack/install")
+    public ResponseEntity<HttpStatus> installPack(@RequestParam String name) {
+        editUserService.installPackByName(name);
+        return new ResponseEntity<>(OK);
+    }
+
+    @PostMapping("/pack/uninstall")
+    public ResponseEntity<HttpStatus> uninstallPack(@RequestParam String name) {
+        editUserService.uninstallPackByName(name);
         return new ResponseEntity<>(OK);
     }
 }

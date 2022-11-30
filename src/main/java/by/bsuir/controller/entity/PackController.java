@@ -1,13 +1,17 @@
 package by.bsuir.controller.entity;
 
 import by.bsuir.dto.pack.CreatePackDto;
+import by.bsuir.dto.pack.GetPackDto;
 import by.bsuir.dto.pack.UpdatePackDto;
 import by.bsuir.service.dto.EditPackService;
+import by.bsuir.service.dto.GetPackService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 import static org.springframework.http.HttpStatus.OK;
 
@@ -17,10 +21,12 @@ import static org.springframework.http.HttpStatus.OK;
 public class PackController {
 
     private final EditPackService editPackService;
+    private final GetPackService getPackService;
 
     @Autowired
-    public PackController(EditPackService editPackService) {
+    public PackController(EditPackService editPackService, GetPackService getPackService) {
         this.editPackService = editPackService;
+        this.getPackService = getPackService;
     }
 
     @PostMapping("/create")
@@ -36,8 +42,18 @@ public class PackController {
     }
 
     @DeleteMapping("/delete")
-    public ResponseEntity<HttpStatus> deeletePack(@RequestParam Long packId) {
+    public ResponseEntity<HttpStatus> deletePack(@RequestParam Long packId) {
         editPackService.deletePack(packId);
         return new ResponseEntity<>(OK);
+    }
+
+    @GetMapping("/get/all")
+    public ResponseEntity<List<GetPackDto>> getAll() {
+        return new ResponseEntity<>(getPackService.getAll(), OK);
+    }
+
+    @GetMapping("/get")
+    public ResponseEntity<GetPackDto> getById(@RequestParam Long id) {
+        return new ResponseEntity<>(getPackService.getPackDtoById(id), OK);
     }
 }

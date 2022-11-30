@@ -21,4 +21,6 @@ public interface UserService {
     boolean existsByUserIdAndPack(Long id, Pack pack);
 
     User findByEmail(String email);
+
+    boolean existsByEmail(String email);
 }

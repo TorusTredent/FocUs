@@ -30,7 +30,7 @@ public class DateUtils {
 
     public static LocalDateTime getEndOfMonth(LocalDateTime date) {
         YearMonth month = YearMonth.from(date);
-        return month.atEndOfMonth().atStartOfDay();
+        return month.atEndOfMonth().atTime(23, 59);
     }
 
     public static LocalDateTime getStartOfYear(LocalDateTime date) {
@@ -40,6 +40,6 @@ public class DateUtils {
 
     public static LocalDateTime getEndOfYear(LocalDateTime date) {
         Year year = Year.from(date);
-        return year.atMonth(DECEMBER).atEndOfMonth().atStartOfDay();
+        return year.atMonth(DECEMBER).atEndOfMonth().atTime(23, 59);
     }
 }

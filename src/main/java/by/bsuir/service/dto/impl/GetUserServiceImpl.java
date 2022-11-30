@@ -90,6 +90,8 @@ public class GetUserServiceImpl implements GetUserService {
 
     private List<GetUserDto> mapToGetUserDto(User auth, List<User> users) {
         return users.stream()
+                .filter(user -> user.getUser_status() == ACTIVE)
+                .filter(user -> !user.equals(auth))
                 .map(user -> GetUserDto.builder()
                         .username(user.getUsername())
                         .email(user.getEmail())
@@ -106,17 +108,16 @@ public class GetUserServiceImpl implements GetUserService {
         return followers.stream()
                 .filter(follower -> follower.getUser_status() == ACTIVE)
                 .filter(follower -> blackList.stream()
-                        .anyMatch(blocked -> blocked.equals(follower)))
+                        .noneMatch(blocked -> blocked.equals(follower)))
                 .sorted(Comparator.comparing(User::getUsername))
                 .map(follower -> FriendWithTasksDto.builder()
-                        .friendDto(FriendDto.builder()
+                                .friendDto(FriendDto.builder()
                                 .email(follower.getEmail())
-                                .username(follower.getEmail())
+                                .username(follower.getUsername())
                                 .build())
-                        .friendTaskDtos(getTaskService.mapToFriendsTaskDto(follower, auth, time))
-                        .build())
+                                .friendTaskDtos(getTaskService.mapToFriendsTaskDto(follower, auth, time))
+                                .build())
                 .toList();
-
     }
 
     private String getUid() {

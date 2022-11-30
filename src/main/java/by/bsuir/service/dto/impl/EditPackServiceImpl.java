@@ -48,7 +48,7 @@ public class EditPackServiceImpl implements EditPackService {
         if (packService.existByName(createPackDto.getName())) {
             throw new BusinessException("Pack name is already exist");
         }
-        if (checkPackService.isRankStartWithZero(createPackDto.getCreateRankDtos())) {
+        if (!checkPackService.isRankStartWithZero(createPackDto.getCreateRankDtos())) {
             throw new BusinessException("Bad min or max completed tasks");
         }
         User user = userService.findByFirebaseId(getUid());
@@ -62,6 +62,7 @@ public class EditPackServiceImpl implements EditPackService {
         packService.save(Pack.builder()
                 .author(user)
                 .ranks(ranks)
+                .photoPath(createPackDto.getPhotoPath())
                 .pack_type(PACK_TYPE.CUSTOM)
                 .description(createPackDto.getDescription())
                 .daysBeforeOverwriting(createPackDto.getDaysBeforeOverwriting())
@@ -75,11 +76,12 @@ public class EditPackServiceImpl implements EditPackService {
         User user = userService.findByFirebaseId(getUid());
         Pack pack = getPackService.getPackById(updatePackDto.getPackId());
 
-        if (!userService.existsByUserIdAndPack(user.getId(), pack)) {
+        if (!pack.getAuthor().equals(user)) {
             throw new BusinessException(String.format("User with id %s don't have pack with id %s", user.getId(), updatePackDto.getPackId()),
                     PACK_NOT_FOUND, NOT_FOUND);
         }
 
+        pack.setPhotoPath(updatePackDto.getPhotoPath());
         pack.setName(updatePackDto.getName());
         pack.setDescription(updatePackDto.getDescription());
         pack.setDaysBeforeOverwriting(updatePackDto.getDaysBeforeOverwriting());
@@ -104,6 +106,7 @@ public class EditPackServiceImpl implements EditPackService {
         packService.delete(pack);
         return true;
     }
+
     private String getUid() {
         return securityService.getUser().getUid();
     }

@@ -59,26 +59,6 @@ public class GetTaskServiceImpl implements GetTaskService {
         return mapTasksToTaskDto(taskByDate);
     }
 
-    private List<TaskDto> mapTasksToTaskDto(List<Task> taskByDate) {
-        return taskByDate.stream()
-                .map(task -> TaskDto.builder()
-                        .id(task.getId())
-                        .name(task.getName())
-                        .categories(task.getCategory())
-                        .createDate(task.getCreateDate())
-                        .deadline(task.getDeadLine())
-                        .taskStatus(task.getTaskStatus())
-                        .taskPriority(task.getTaskPriority())
-                        .friendDtos(task.getFriends().stream()
-                                .map(user -> FriendDto.builder()
-                                        .username(user.getUsername())
-                                        .email(user.getEmail())
-                                        .build())
-                                .toList())
-                        .build())
-                .toList();
-    }
-
     @Override
     public Long getNumberOfCompletedTasks(List<Task> tasks) {
         return tasks.stream()
@@ -91,7 +71,6 @@ public class GetTaskServiceImpl implements GetTaskService {
         return friend.getTasks().stream()
                 .filter(task -> task.getFriends().stream()
                         .anyMatch(user -> user.equals(author)))
-                .filter(task -> task.getTaskPrivacy() == PUBLIC)
                 .filter(task -> task.getDeadLine().getDayOfYear() == time.getDayOfYear() &&
                         task.getDeadLine().getYear() == time.getYear())
                 .collect(Collectors.toList());
@@ -113,10 +92,10 @@ public class GetTaskServiceImpl implements GetTaskService {
     public List<TaskDto> getAllInMonth(LocalDateTime date) {
         User user = userService.findByFirebaseId(getUid());
 
-        LocalDateTime startOfCurrentWeek = getStartOfMonth(date);
+        LocalDateTime startOfCurrentMonth = getStartOfMonth(date);
         LocalDateTime endOfMonth = getEndOfMonth(date);
 
-        List<Task> taskByDate = taskService.findTaskByUserIdAndDateBetween(user.getId(), startOfCurrentWeek, endOfMonth);
+        List<Task> taskByDate = taskService.findTaskByUserIdAndDateBetween(user.getId(), startOfCurrentMonth, endOfMonth);
 
         return mapTasksToTaskDto(taskByDate);
     }
@@ -158,6 +137,26 @@ public class GetTaskServiceImpl implements GetTaskService {
                 .toList()
         );
         return taskStatDto;
+    }
+
+    private List<TaskDto> mapTasksToTaskDto(List<Task> taskByDate) {
+        return taskByDate.stream()
+                .map(task -> TaskDto.builder()
+                        .id(task.getId())
+                        .name(task.getName())
+                        .categories(task.getCategory())
+                        .createDate(task.getCreateDate())
+                        .deadline(task.getDeadLine())
+                        .taskStatus(task.getTaskStatus())
+                        .taskPriority(task.getTaskPriority())
+                        .friendDtos(task.getFriends().stream()
+                                .map(user -> FriendDto.builder()
+                                        .username(user.getUsername())
+                                        .email(user.getEmail())
+                                        .build())
+                                .toList())
+                        .build())
+                .toList();
     }
 
     private String getUid() {

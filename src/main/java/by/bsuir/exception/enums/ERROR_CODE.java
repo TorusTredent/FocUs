@@ -9,7 +9,8 @@ public enum ERROR_CODE {
     USER_NOT_FOUND("User not found"),
     CATEGORY_NOT_FOUND("Category not found"),
     TASK_NOT_FOUND ("Task not found"),
-    PACK_NOT_FOUND("Pack not found");
+    PACK_NOT_FOUND("Pack not found"),
+    RANK_NOT_FOUND("Rank not found");
 
     private String message;
 

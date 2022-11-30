@@ -2,6 +2,7 @@ package by.bsuir.service.entity.impl;
 
 import by.bsuir.entity.Pack;
 import by.bsuir.entity.Rank;
+import by.bsuir.entity.User;
 import by.bsuir.entity.enums.pack.PACK_TYPE;
 import by.bsuir.exception.BusinessException;
 import by.bsuir.exception.enums.ERROR_CODE;
@@ -50,5 +51,22 @@ public class PackServiceImpl implements PackService {
     @Override
     public void delete(Pack pack) {
         packRepository.delete(pack);
+    }
+
+    @Override
+    public Pack findPackByName(String name) {
+        return packRepository.findByName(name)
+                .orElseThrow(() -> new BusinessException(String.format("Pack with name %s not found", name), PACK_NOT_FOUND, NOT_FOUND));
+    }
+
+    @Override
+    public List<Pack> getAll() {
+        return packRepository.findAll();
+    }
+
+    @Override
+    public Pack findPackByAuthorAndId(User user, Long packId) {
+        return packRepository.findByAuthorAndId(user, packId)
+                .orElseThrow(() -> new BusinessException(String.format("Pack with id %s not found", packId), PACK_NOT_FOUND, NOT_FOUND));
     }
 }

@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 public class UpdatePackDto {
 
     private Long packId;
+    private String photoPath;
     private String name;
     private String description;
     private int daysBeforeOverwriting;

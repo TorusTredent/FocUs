@@ -33,7 +33,7 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public List<Task> findTaskByUserIdAndDateBetween(Long id, LocalDateTime startOfCurrentWeek, LocalDateTime endOfWeek) {
-        return taskRepository.findAllByAuthorIdAndAndCreateDateIsBetween(id, startOfCurrentWeek, endOfWeek)
+        return taskRepository.getAllBetweenDates(id, startOfCurrentWeek, endOfWeek)
                 .orElseThrow(() -> new BusinessException(String.format("Tasks with userId %s and date %s not found",
                         id, startOfCurrentWeek), TASK_NOT_FOUND, NOT_FOUND));
     }

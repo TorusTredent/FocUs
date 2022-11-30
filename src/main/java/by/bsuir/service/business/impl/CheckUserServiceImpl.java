@@ -1,10 +1,12 @@
 package by.bsuir.service.business.impl;
 
+import by.bsuir.entity.Pack;
 import by.bsuir.entity.User;
 import by.bsuir.entity.security.SecurityUserFirebase;
 import by.bsuir.service.business.CheckUserService;
 import by.bsuir.service.business.FactService;
 import by.bsuir.service.business.TranslatorService;
+import by.bsuir.service.entity.PackService;
 import by.bsuir.service.entity.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,13 +24,15 @@ public class CheckUserServiceImpl implements CheckUserService {
     private final UserService userService;
     private final FactService factService;
     private final TranslatorService translatorService;
+    private final PackService packService;
 
 
     @Autowired
-    public CheckUserServiceImpl(UserService userService, FactService factService, TranslatorService translatorService) {
+    public CheckUserServiceImpl(UserService userService, FactService factService, TranslatorService translatorService, PackService packService) {
         this.userService = userService;
         this.factService = factService;
         this.translatorService = translatorService;
+        this.packService = packService;
     }
 
     @Override
@@ -71,6 +75,21 @@ public class CheckUserServiceImpl implements CheckUserService {
     @Override
     public boolean checkUserInList(List<User> list, User user) {
         return list.stream().anyMatch(user::equals);
+    }
+
+    @Override
+    public boolean checkUserPack(SecurityUserFirebase authorizationServiceUser) {
+        User user = userService.findByFirebaseId(authorizationServiceUser.getUid());
+
+        if (user.getUsedPack() != null) {
+            return true;
+        }
+
+        Pack pack = packService.findPackWithDefaultType();
+        user.setUsedPack(pack);
+        userService.save(user);
+
+        return true;
     }
 
 
