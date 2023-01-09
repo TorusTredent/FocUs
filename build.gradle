@@ -2,6 +2,7 @@ plugins {
     id 'org.springframework.boot' version '2.7.4'
     id 'io.spring.dependency-management' version '1.0.14.RELEASE'
     id 'java'
+    id 'org.liquibase.gradle' version '2.1.1'
 }
 
 group = 'by.bsuir'
@@ -23,6 +24,11 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.liquibase:liquibase-core'
+    liquibaseRuntime 'org.liquibase:liquibase-groovy-dsl:3.0.2'
+    liquibaseRuntime 'info.picocli:picocli:4.6.3'
+    liquibaseRuntime group: 'javax.xml.bind', name: 'jaxb-api', version: '2.3.1'
+    liquibaseRuntime sourceSets.main.output
+
     implementation 'org.springframework.boot:spring-boot-starter-mail:2.7.4'
     implementation 'com.google.firebase:firebase-admin:9.0.0'
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
@@ -36,6 +42,10 @@ dependencies {
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
+}
+
+configurations {
+    liquibaseRuntime.extendsFrom runtimeClasspath
 }
 
 tasks.named('test') {
